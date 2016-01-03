@@ -1,0 +1,10 @@
+- name: setup sakura vps
+  hosts: sakura
+  user: admin
+  sudo: yes
+
+  roles:
+    - common
+    - php-fpm
+    - nginx
+    - mariadb

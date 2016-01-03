@@ -1,0 +1,51 @@
+- name: Set timezone
+  shell: timedatectl set-timezone Asia/Tokyo
+
+- name: Set fastestmirror filter
+  lineinfile: >
+    dest=/etc/yum/pluginconf.d/fastestmirror.conf
+    state=present
+    regexp='^include_only'
+    line='include_only=.jp'
+    insertafter='#include_only'
+
+- name: Add EPEL repository
+  shell: creates=/etc/yum.repos.d/epel.repo yum install -y epel-release
+
+- name: Add Remi repository
+  command: rpm -Uivh --replacepkgs http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+
+- name: yum update
+  yum: name=* state=latest
+
+- name: Install basic packages
+  yum: name={{ item }} state=installed
+  with_items:
+    - ruby-devel
+    - readline-devel
+    - ncurses-devel
+    - gdbm-devel
+    - openssl-devel
+    - libxslt-devel
+    - sqlite-devel
+    - libyaml
+    - libyaml-devel
+    - tcl-devel
+    - db4-devel
+    - libffi-devel
+    - gcc
+    - libxml2
+    - libxml2-devel
+    - libxslt
+    - libxslt-devel
+    - vim
+    - zsh
+    - jq
+    - tree
+    - wget
+
+- name: Install Development Tool
+  shell: yum -y groupinstall "Development Tools"
+
+- name: SELinux Permissive
+  shell: setenforce 0

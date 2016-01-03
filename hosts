@@ -1,0 +1,2 @@
+[sakura]
+xx.xx.xx.xx  ansible_ssh_port=10022  ansible_ssh_user=admin

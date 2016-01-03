@@ -1,0 +1,19 @@
+- name: install mariadb
+  yum: name={{ item }} state=installed
+  with_items:
+    - MySQL-python
+    - mariadb
+    - mariadb-server
+    - libselinux-python
+
+- name: start mariadb
+  service: name=mariadb state=started enabled=yes
+
+- name: set root password
+  mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_root_password }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    check_implicit_admin: yes

@@ -1,0 +1,33 @@
+- name: Install php-fpm-70
+  yum: name={{ item }} state=latest enablerepo=remi,remi-php70
+  with_items:
+    - php
+    - php-devel
+    - php-fpm
+    - php-mbstring
+    - php-pdo
+    - php-mcrypt
+    - php-mysqlnd
+    - php-opcache
+    - php-xml
+
+- name: change listen
+  command: sed -i "s|listen = 127.0.0.1:9000|listen = /var/run/php7-fpm.sock|g" /etc/php-fpm.d/www.conf
+
+- name: change user
+  command: sed -i "s|user = apache|user = nginx|g" /etc/php-fpm.d/www.conf
+
+- name: change group
+  command: sed -i "s|group = apache|group = nginx|g" /etc/php-fpm.d/www.conf
+
+- name: uncomment listen.owner
+  command: sed -i "s|;listen.owner = nobody|listen.owner = nginx|g" /etc/php-fpm.d/www.conf
+
+- name: uncomment listen.group
+  command: sed -i "s|;listen.group = nobody|listen.group = nginx|g" /etc/php-fpm.d/www.conf
+
+- name: uncomment listen.owner
+  command: sed -i "s|;listen.mode = 0660|listen.mode = 0660|g" /etc/php-fpm.d/www.conf
+
+- name: Automatic load when boot
+  command: systemctl enable php-fpm.service
